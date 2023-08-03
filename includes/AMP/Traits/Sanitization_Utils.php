@@ -715,4 +715,28 @@ trait Sanitization_Utils {
 			$document->head->appendChild( $new_description );
 		}
 	}
+
+	/**
+     * Removes all other child nodes inside body tag other than amp-story.
+     *
+     * @since 1.34.0
+     *
+     * @param Document|AMP_Document $document Document instance.
+     */
+    private function remove_amp_story_sibling_tags( $document ): void {
+        /**
+         * List of child nodes inside body tag.
+         *
+         * @var DOMNodeList $child_nodes nodes inside body.
+         */
+        $child_nodes = $document->body->childNodes;
+
+        foreach ( $child_nodes as $child ) {
+            if ($child->nodeName === 'amp-story') {
+                continue;
+            } else if ($child->nodeName !== '#comment') {
+                $child->parentNode->removeChild($child);
+            }
+        }
+    }
 }
